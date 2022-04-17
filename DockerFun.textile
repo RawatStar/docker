@@ -1,0 +1,112 @@
+Docker
+
+~~~~~~~~~~~~~~~~~~Docker LifeCycle~~~~~~~~~~~~~~~~~~~
+
+We pull an image from DockerHub
+It make image
+Then we run image and its creates its Container.
+Now Container can be start, Stop and kill.
+
+
+~~~~~~~~~~~~~~~~~~~~~~~Installing Docker~~~~~~~~~~~~~~~~~
+
+    4  sudo apt-get install ca-certificates curl gnupg lsb-release
+    5  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    6  sudo apt-get update -y
+    7  sudo apt-get install docker-ce docker-ce-cli containerd.io
+    8  docker --version
+
+~~~~~~~~~~~~~~~~~~~~~~Docker Commands~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker --version
+
+
+We can run docker in detached mode(-d) or attached mode
+docker pull ubuntu
+
+Detached mode:- means running in background
+Attached mode:- runnning in foreground
+
+docker images
+
+docker run -d -it ubuntu 
+d- detached
+i- interacting
+t- terminal 
+
+docker stop <container ID>
+docker ps // list running container
+docker ps -a // all container
+
+
+
+docker exec -it <id> /bin/bash  // you will go inside the terminal
+
+Ctrl+P+Q // without stopping the container u will come out.
+
+docker attach <container name> // you will go inside running conatiner
+
+bash -- here used to use current OS terminal i.e bash
+
+
+kill - It will stop forcefully all application
+Stop - It will stop gracefully all application
+
+____________________ Saving Change in Container __________________________
+docker commit b667c033f0e3 rawatstar/coustom_ubuntu //make changes in image and create new
+
+docker commit <container ID> <custome new imageName>
+__________________________________________________________________________
+docker login
+username - Rawatstar
+passwaord - 
+docker push rawatstar/coustom_ubuntu // this will push to u dockerhub 
+docker push DockerHubName/imageName
+
+docker rm <container ID> // delete the conatiner
+
+docker rmi <image ID> // delete image
+
+docker rm -f $(docker ps -a -q) // this will delete all container at once
+_________________________________________________________________________
+
+Running image with services inside in host machine using thier port Number
+
+docker run -it -p 81:80 -d rawatstar/coustom_ubuntu // p stand for port
+
+__________________________________________________________________
+ ~~~~~~~~~~~~~DockerFile~~~~~~~~~~~~~~~~~~~~~~
+
+ Used to create custome docker image.
+
+
+ touch dockerfile
+
+FROM ubuntu // define base image or download image
+RUN apt update -y // RUN command is used to run any command inside the terminal
+RUN apt install apache -y
+ADD . /var/www/html // copy from . (current) to destination
+ENTRYPOINT apachectl -D FOREGROUND // run command on start of container
+ENV name Manish
+
+docker build . -t new_dockerfile
+
+
+____________________Interview__________________________
+ COPY- Static file 
+ vs
+ ADD - Dynamic file
+
+
+ RUN- Command grt 
+ CMD- Command gets exec when start the container // process to start like apache
+
+ CMD- only run when arrgument is not specified. so it can skiped if arrgument is specified
+ ENTRYPOINT- run irrespective of fact arrgument specified or not, it will not skiped  
+
+ EVN - for declaring the variable in dockerfile
+
+
+docker container cp 128ID:/hello.txt . (container to host)
+
+docker container cp ./test.txt 83ID:/ (host to conatiner)
